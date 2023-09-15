@@ -1,7 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
+import os
 
 app = Flask(__name__)
 app.secret_key = "mysecretkey"  # for flash messaging and session
+
+UPLOAD_FOLDER = 'uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Dummy data: Normally, you'd use a database
 users = {"username": "password"}
@@ -9,7 +13,8 @@ users = {"username": "password"}
 @app.route("/")
 def home():
     if "username" in session:
-        return render_template("upload.html")
+        files = os.listdir(UPLOAD_FOLDER)
+        return render_template("upload.html", files=files)
     return render_template("index.html")
 
 @app.route("/login", methods=["GET", "POST"])
@@ -41,10 +46,21 @@ def upload_file():
         return redirect(request.url)
     
     if uploaded_file:
-        # Normally, you'd save the file here
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], uploaded_file.filename)
+        uploaded_file.save(file_path)
         flash(f"File {uploaded_file.filename} uploaded successfully!", "success")
 
     return redirect(url_for("home"))
 
+
+@app.route("/signout")
+def signout():
+    session.pop("username", None)
+    flash("You have been signed out", "info")
+    return redirect(url_for("home"))
+
+
 if __name__ == "__main__":
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER)
     app.run(debug=True)
