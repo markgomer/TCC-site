@@ -11,7 +11,7 @@ const app = express();
  * Setting Up Dropbox API Client
  */
 const dbx = new Dropbox({
-  accessToken: 'sl.BmQCQASIbcXhVSGgFTQUkb4I7mRvl4zShTKNo_QmZ4dyAHaulJy0-ApBOJy1SkpJUU4VMqCF12-uINkdsSxISQWfQ594zs5i_lxM21bihUuaeIuNi2JUfgsn4Zu1HyitYtp1tR3vfxq0GbHo_T2BZMM',
+  accessToken: 'sl.BmV6emNPtceUB4xkQZlOfumd7yUd5H2Y87A3AlVf3uXRC32l0-4p5ruf7DzIH-dfZ7MVO8gVtgzvoe8WYt0qBbFgJ4c49i5tY5XoRl1SmJrn-IZyh0nab0igtW-TJHKtx7kBQ0dT2Da0f6IAZA',
   fetch: fetch
 });
 
