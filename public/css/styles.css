@@ -1,0 +1,13 @@
+#top-bar {
+    background-color: #333;
+    color: white;
+    padding: 1em;
+}
+
+#left-menu {
+    width: 200px;
+}
+
+#main-content {
+    margin-left: 220px;
+}
