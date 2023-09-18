@@ -4,14 +4,15 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const Dropbox = require('dropbox').Dropbox;
 const fetch = require('node-fetch');
+require('dotenv').config();
 
 const app = express();
 
 /**
  * Setting Up Dropbox API Client
- */
+*/
 const dbx = new Dropbox({
-  accessToken: 'sl.BmV6emNPtceUB4xkQZlOfumd7yUd5H2Y87A3AlVf3uXRC32l0-4p5ruf7DzIH-dfZ7MVO8gVtgzvoe8WYt0qBbFgJ4c49i5tY5XoRl1SmJrn-IZyh0nab0igtW-TJHKtx7kBQ0dT2Da0f6IAZA',
+  accessToken: process.env.DROPBOX_API_KEY,
   fetch: fetch
 });
 
