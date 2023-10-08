@@ -114,7 +114,7 @@ function successPieChart(successData) {
     new Chart(ctxPie, {
         type: 'pie',
         data: {
-            labels: ["Acertos", "Erros"], 
+            labels: ["Erros", "Acertos"], 
             datasets: [{
                 data: Object.values(successData),
                 backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'], // Add more colors if needed
