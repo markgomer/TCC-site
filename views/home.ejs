@@ -16,21 +16,12 @@
   <!-- Top Bar -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <a class="navbar-brand" href="/">DashBoard</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Listar Atividades</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Listar Funcionários</a>
-          </li>
-        </ul>
-      </div>
+
     </div>
   </nav>
 
@@ -49,22 +40,62 @@
         -->
         <div class="container" id="dashboard">
           <div class="row">
+            
             <!-- For small devices: 1 column, For medium to large devices: 3 columns -->
-            <div class="col-sm-12 col-md-4">
-              <canvas id="successPieChart">
-                Chart1
-              </canvas>
+            <div class="col-sm-12 col-md-6">
+              Chart1
+              <canvas id="successPieChart" width="200" height="200"></canvas>
             </div>
-            <div class="col-sm-12 col-md-4">
-              <canvas id="timeSpentBarChart">
-                Chart2
-              </canvas>
+            
+            <div class="col-sm-12 col-md-6">
+              <canvas id="successRateBarPlot" width="400" height="200"></canvas>
             </div>
-            <div class="col-sm-12 col-md-4">
-              <canvas id="listaFuncionarios">
-                Chart3
-              </canvas>
+            
+            <div class="col-sm-12 col-md-6">
+              Chart2
+              <canvas id="timeSpentBarChart"></canvas>
             </div>
+
+            <div class="col-sm-12 col-md-6">
+              Chart3
+              <canvas id="playerActivityChart"></canvas>
+            </div>
+            
+            <div class="col-sm-12 col-md-6">
+              <div class="card text-center bg-info text-white">
+                <div class="card-header">
+                  Player Statistics
+                </div>
+                <div class="card-body">
+                  <h4 class="card-title">Average Time per Player</h4>
+                  <p class="card-text display-4" id="averageTime">Calculating...</p>
+                </div>
+                <div class="card-footer text-muted">
+                  Updated just now
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="col-sm-12 col-md-6">
+                  <div class="card">
+                    <div class="card-header">
+                      Most Observed Objects
+                    </div>
+                    <ul class="list-group list-group-flush" id="mostObservedObjectsList">
+                      <!-- Items will be populated here -->
+                    </ul>
+                  </div>
+            </div>
+
+
+
+
+
+
+
+
           </div>
         </div>
           
