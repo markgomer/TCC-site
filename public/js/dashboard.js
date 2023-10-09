@@ -4,9 +4,40 @@
  * Charts functions
  ***************************************/
 
-/**
- *  This will change in the future versions!!
- */
+
+function filterByPlayerName(jsonList, playerName) {
+    return jsonList.filter(item => item.playerName === playerName);
+}
+
+  
+function extractUniquePlayerNames(jsonList) {
+    const namesSet = new Set();
+    jsonList.forEach(item => {
+        if (item.hasOwnProperty('playerName')) {
+            namesSet.add(item.playerName.toUpperCase());
+        }
+    });
+    return Array.from(namesSet);
+}
+
+
+function extractUniqueObjectNames(jsonList) {
+    const objectNamesSet = new Set();
+    
+    jsonList.forEach(item => {
+      if (item.hasOwnProperty('objectsData')) {
+        item.objectsData.forEach(objData => {
+          if (objData.hasOwnProperty('objectName')) {
+            objectNamesSet.add(objData.objectName);
+          }
+        });
+      }
+    });
+  
+    return Array.from(objectNamesSet);
+}
+
+
 function getTotalRightHits(jsonFilesArray) {
     let totalRightHits = 0;
     jsonFilesArray.forEach(sessionJson => {
@@ -19,6 +50,7 @@ function getTotalRightHits(jsonFilesArray) {
     return totalRightHits;
 }
 
+
 function getTotalInteractions(jsonFilesArray) {
     let totalInteractions = 0;
     jsonFilesArray.forEach(sessionJson => {
@@ -28,40 +60,107 @@ function getTotalInteractions(jsonFilesArray) {
 }
 
 
-function getTotalMeanTime(jsonFilesArray) {
-    let totalMeanTime = 0;
-    let totalTime = 0.0;
-    let totalInteractions = 0;
-    jsonFilesArray.forEach(sessionJson => {
-        totalInteractions += sessionJson.objectsData.length;
-        totalTime += sessionJson.objectsData.timeObserved;
+function calculateAverageTimePerPlayer(jsonList) {
+    let totalTime = 0;
+    const namesSet = new Set();
+
+    jsonList.forEach(item => {
+        if (item.hasOwnProperty('playerName') && item.hasOwnProperty('totalTime')) {
+            totalTime += item.totalTime;
+            namesSet.add(item.playerName.toLowerCase());  // Making it case insensitive
+        }
     });
-    totalMeanTime = totalTime / totalInteractions;
-    return totalMeanTime;
+
+    // Calculate the average time
+    const numberOfUniquePlayers = namesSet.size;
+    if (numberOfUniquePlayers === 0) return 0; // Prevent division by zero
+
+    const averageTime = totalTime / numberOfUniquePlayers;
+
+    return averageTime;
 }
 
 
-function getEmployeesList(jsonFilesArray) {
-    let employeesList = [];
-    jsonFilesArray.forEach(sessionJson => {
-        employeesList.push(sessionJson.playerName);
+function calculateSuccessRate(jsonList, playerName) {
+    const uniqueObjectNames = new Set();
+    let successCount = 0;
+    const lowerCasePlayerName = playerName.toLowerCase(); // Make it case insensitive
+
+    jsonList.forEach(item => {
+        if (item.hasOwnProperty('playerName') && item.playerName.toLowerCase() === lowerCasePlayerName) {
+            if (item.hasOwnProperty('objectsData')) {
+                item.objectsData.forEach(objData => {
+                    if (objData.hasOwnProperty('objectName') && objData.hasOwnProperty('status')) {
+                        const objectName = objData.objectName;
+                        const status = objData.status.toString();  // Make sure it's a string
+
+                        // Count unique objectName values
+                        uniqueObjectNames.add(objectName);
+
+                        // Check if it's a success
+                        if (objectName[0] === status[0]) {
+                            successCount++;
+                        }
+                    }
+                });
+            }
+        }
     });
-    return employeesList;
+
+    // Calculate the success rate
+    const totalUniqueObjects = uniqueObjectNames.size;
+    if (totalUniqueObjects === 0) return 0; // Prevent division by zero
+
+    const successRate = (successCount / totalUniqueObjects) * 100;
+
+    return successRate;
 }
 
 
-function getActivityList(jsonFilesArray) {
-    let activityList = [];
-    jsonFilesArray.forEach(sessionJson => {
-        sessionJson.objectsData.forEach(obj => {
-            activityList.push(obj.objectName);
-        })
+function plotSuccessRateBarChart(data) {
+    const playersSet = new Set();
+    data.forEach(item => playersSet.add(item.playerName.toLowerCase()));
+
+    const uniquePlayers = Array.from(playersSet);
+    const playerSuccessRates = [];
+
+    uniquePlayers.forEach(player => {
+        const successRate = calculateSuccessRate(data, player);
+        playerSuccessRates.push({ playerName: player, successRate });
     });
-    return activityList;
+
+    // Sort players by success rate in descending order and take the top 10
+    const topPlayers = playerSuccessRates.sort((a, b) => b.successRate - a.successRate).slice(0, 10);
+
+    const topPlayerNames = topPlayers.map(player => player.playerName);
+    const topSuccessRates = topPlayers.map(player => player.successRate);
+
+    const ctx = document.getElementById('successRateBarPlot').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: topPlayerNames,
+            datasets: [{
+                label: 'Success Rate (%)',
+                data: topSuccessRates,
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
 }
 
 
-function getMeanTimeByActivity (jsonFilesArray, activityName) {
+function getMeanTimeByActivity (jsonFilesArray) {
     const sumObj = {};
     const countObj = {};
     const meanObj = {};
@@ -87,6 +186,182 @@ function getMeanTimeByActivity (jsonFilesArray, activityName) {
     return meanObj;
 }
 
+
+function successPieChart(successData) {
+    const ctx = document.getElementById('successPieChart').getContext('2d');
+
+    const data = {
+        labels: ["Erros", "Acertos"],
+        // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'], FOR TESTING
+        datasets: [{
+            data: Object.values(successData),
+            // data: [12, 19, 3, 5, 2], FOR TESTING
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(153, 102, 255, 0.6)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    const config = {
+        type: 'pie',
+        data: data
+    };
+
+    new Chart(ctx, config);
+}
+  
+
+function timeSpentBarChart(timeSpentData) {
+    const ctx = document.getElementById('timeSpentBarChart').getContext('2d');
+  
+    const data = {
+      //labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
+      labels: Object.keys(timeSpentData),
+      datasets: [{
+        //label: 'Sample Data',
+        //data: [12, 19, 3, 5, 2],
+        label: "Mean time spent",
+        data: Object.values(timeSpentData),
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.6)',
+          'rgba(54, 162, 235, 0.6)',
+          'rgba(255, 206, 86, 0.6)',
+          'rgba(75, 192, 192, 0.6)',
+          'rgba(153, 102, 255, 0.6)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)'
+        ],
+        borderWidth: 1
+      }]
+    };
+  
+    const config = {
+      type: 'bar',
+      data: data,
+      options: {
+        tooltips: {
+            callbacks: {
+                label: function (tooltipItem) { 
+                    return `Time Spent: ${tooltipItem.yLabel}`;
+                },
+            },
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    };
+  
+    new Chart(ctx, config);
+}
+
+
+function createPlayerActivityDistribution(jsonList) {
+    // Create a dictionary to store the sum of totalTime for each unique player
+    const playerTimeDict = {};
+
+    // Populate the dictionary
+    jsonList.forEach(item => {
+        if (item.hasOwnProperty('playerName') && item.hasOwnProperty('totalTime')) {
+            const playerName = item.playerName.toLowerCase(); // Making it case insensitive
+            if (playerTimeDict[playerName]) {
+                playerTimeDict[playerName] += item.totalTime;
+            } else {
+                playerTimeDict[playerName] = item.totalTime;
+            }
+        }
+    });
+
+    // Prepare data for the chart
+    const labels = Object.keys(playerTimeDict);
+    const data = Object.values(playerTimeDict);
+
+    // Create the chart
+    const ctx = document.getElementById('playerActivityChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Total Time Spent',
+                data: data,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Player Activity Distribution'
+                }
+            }
+        }
+    });
+}
+
+
+// Function to find most observed objects
+function findMostObservedObjects(jsonList) {
+    const objectCounts = {};
+
+    jsonList.forEach(item => {
+        if (item.hasOwnProperty('objectsData')) {
+            item.objectsData.forEach(objData => {
+                const objectName = objData.objectName;
+                objectCounts[objectName] = (objectCounts[objectName] || 0) + 1;
+            });
+        }
+    });
+
+    // Sort by count, then return the sorted array
+    return Object.keys(objectCounts).sort((a, b) => objectCounts[b] - objectCounts[a]);
+}
+
+
+function showMostObservedObjects(data) {
+    // Populate the list
+    const mostObservedObjects = findMostObservedObjects(data);
+    const listGroup = document.getElementById('mostObservedObjectsList');
+    
+    mostObservedObjects.forEach(objectName => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item';
+        li.textContent = objectName;
+        listGroup.appendChild(li);
+    });
+}
+  
+
+function showTime(averageTime) {
+    document.getElementById('averageTime').innerText = averageTime.toFixed(1) + ' secs';
+}
+
 /**
 * Fetch and Prepare Data
 * Assuming you have a route /dashboard in your Express app that serves 
@@ -94,60 +369,22 @@ function getMeanTimeByActivity (jsonFilesArray, activityName) {
 */
 async function fetchAndPrepareData() {
     const response = await fetch('/dashboard');
-    const jsonFilesArray = await response.json();
+    const jsonList = await response.json();
   
-    const successData = []; // Holds success counts by employee
-    let timeSpentData = 0; // Holds time spent by activity
+    const successData = [];
+    successData.push(getTotalRightHits(jsonList)); // Holds success counts by employee
+    successData.push(getTotalInteractions(jsonList));
+
+    const timeSpentData = getMeanTimeByActivity(jsonList); // Holds time spent by activity
     
-    successData.push(getTotalRightHits(jsonFilesArray));
-    successData.push(getTotalInteractions(jsonFilesArray));
-    // {"activity": meanTime, ...}
-    timeSpentData = getMeanTimeByActivity(jsonFilesArray);
-    console.log(successData);
-    console.log(timeSpentData);
-    return { successData, timeSpentData };
-}
+    const averageTime = calculateAverageTimePerPlayer(jsonList);
+    
+    const employeesList = extractUniquePlayerNames(jsonList);
+    const filteredData = filterByPlayerName(jsonList, "Anderson");
+    const uniqueObjectNames = extractUniqueObjectNames(jsonList);
 
-
-function successPieChart(successData) {
-    const ctxPie = document.getElementById('successPieChart').getContext('2d');
-    new Chart(ctxPie, {
-        type: 'pie',
-        data: {
-            labels: ["Erros", "Acertos"], 
-            datasets: [{
-                data: Object.values(successData),
-                backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'], // Add more colors if needed
-            }],
-        },
-    });
-}
-
-
-function timeSpentBarChart(timeSpentData) {
-    const ctxBar = document.getElementById('timeSpentBarChart').getContext('2d');
-    new Chart(ctxBar, {
-        type: 'bar',
-        data: {
-            labels: Object.keys(timeSpentData),
-            datasets: [{
-                label: "Mean time spent",
-                data: Object.values(timeSpentData),
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }],
-        },
-        options: {
-            tooltips: {
-                callbacks: {
-                    label: function (tooltipItem) {
-                        return `Time Spent: ${tooltipItem.yLabel}`;
-                    },
-                },
-            },
-        },
-    });
+    
+    return { jsonList, successData, timeSpentData, averageTime };
 }
 
 
@@ -157,13 +394,19 @@ function timeSpentBarChart(timeSpentData) {
 * bar charts
 */
 async function populateCharts() {
-    const { successData, timeSpentData } = await fetchAndPrepareData();
+    const { jsonList, successData, timeSpentData, averageTime } = await fetchAndPrepareData();
 
     // Create Pie Chart for Success Data
     successPieChart(successData);
+    plotSuccessRateBarChart(jsonList);
 
     // Create Bar Chart for Time Spent Data
     timeSpentBarChart(timeSpentData);
+
+    createPlayerActivityDistribution(jsonList);
+
+    showTime(averageTime);
+    showMostObservedObjects(jsonList);
 }
 
 populateCharts();
