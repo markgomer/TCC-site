@@ -326,6 +326,54 @@ function createPlayerActivityDistribution(jsonList) {
 }
 
 
+function plotScatterChart(dataArray) {
+    // Prepare data for scatter plot
+    const scatterData = [];
+
+    // Loop through each game session's data
+    dataArray.forEach((gameSession) => {
+        gameSession.objectsData.forEach((objectData) => {
+            scatterData.push({
+                x: objectData.timeObserved,
+                y: objectData.timeSelected,
+            });
+        });
+    });
+
+    // Create scatter plot using Chart.js
+    const ctx = document.getElementById('scatterPlot').getContext('2d');
+    const scatterChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Time Observed vs Time Selected',
+                data: scatterData,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom',
+                    title: {
+                        display: true,
+                        text: 'Time Observed'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Time Selected'
+                    }
+                }
+            }
+        }
+    });
+}
+
 // Function to find most observed objects
 function findMostObservedObjects(jsonList) {
     const objectCounts = {};
@@ -371,6 +419,8 @@ async function fetchAndPrepareData() {
     const response = await fetch('/dashboard');
     const jsonList = await response.json();
   
+    //localStorage.setItem('jsonList', jsonList);
+
     const successData = [];
     successData.push(getTotalRightHits(jsonList)); // Holds success counts by employee
     successData.push(getTotalInteractions(jsonList));
@@ -383,7 +433,6 @@ async function fetchAndPrepareData() {
     const filteredData = filterByPlayerName(jsonList, "Anderson");
     const uniqueObjectNames = extractUniqueObjectNames(jsonList);
 
-    
     return { jsonList, successData, timeSpentData, averageTime };
 }
 
@@ -406,7 +455,11 @@ async function populateCharts() {
     createPlayerActivityDistribution(jsonList);
 
     showTime(averageTime);
+    
+    plotScatterChart(jsonList);
+
     showMostObservedObjects(jsonList);
+    
 }
 
 populateCharts();

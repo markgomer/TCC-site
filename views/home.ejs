@@ -17,11 +17,9 @@
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">DashBoard</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
+      <a class="navbar-brand" href="/employeeList">Listar Funcionários</a>
+      <a class="navbar-brand" href="/update">Atualizar</a>
+      
     </div>
   </nav>
 
@@ -31,34 +29,45 @@
 
       <!-- Main Content -->
       <main class="col-sm-12 col-lg-10">
-        <!-- Your dashboard goes here 
-          <div id="dashboard">
-            <canvas id="successPieChart"></canvas>
-            <canvas id="timeSpentBarChart"></canvas>
-            <canvas id="listaFuncionarios"></canvas>
-          </div>
-        -->
+
         <div class="container" id="dashboard">
           <div class="row">
             
-            <!-- For small devices: 1 column, For medium to large devices: 3 columns -->
+            <!-- For small devices: 1 column, For medium to large devices: 2 columns -->
             <div class="col-sm-12 col-md-6">
-              Chart1
-              <canvas id="successPieChart" width="200" height="200"></canvas>
+              <div class="card">
+                <div class="card-header">
+                  Taxa de acerto total da empresa
+                </div>
+                <canvas id="successPieChart" width="200" height="200"></canvas>
+              </div>
             </div>
             
             <div class="col-sm-12 col-md-6">
-              <canvas id="successRateBarPlot" width="400" height="200"></canvas>
+              <div class="card">
+                <div class="card-header">
+                  Jogadores com maior taxa de acerto
+                </div>
+                <canvas id="successRateBarPlot" width="400" height="400"></canvas>
+              </div>
             </div>
             
             <div class="col-sm-12 col-md-6">
-              Chart2
-              <canvas id="timeSpentBarChart"></canvas>
+              <div class="card">
+                <div class="card-header">
+                  Tempo médio gasto em cada objeto
+                </div>
+                <canvas id="timeSpentBarChart"></canvas>
+              </div>
             </div>
 
             <div class="col-sm-12 col-md-6">
-              Chart3
-              <canvas id="playerActivityChart"></canvas>
+              <div class="card">
+                <div class="card-header">
+                  Tempo total de cada usuário
+                </div>
+                <canvas id="playerActivityChart"></canvas>
+              </div>
             </div>
             
             <div class="col-sm-12 col-md-6">
@@ -76,8 +85,15 @@
               </div>
             </div>
 
-
-
+            <div class="col-sm-12 col-md-6">
+                  <div class="card">
+                    <div class="card-header">
+                      Scatter Plot of Time Observed vs. Time Selected
+                    </div>
+                    <canvas id="scatterPlot" width="400" height="400"></canvas>
+                  </div>
+            </div>
+            
             <div class="col-sm-12 col-md-6">
                   <div class="card">
                     <div class="card-header">

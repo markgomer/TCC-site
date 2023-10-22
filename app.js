@@ -79,7 +79,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  res.render('login'); // Render the 'login.ejs' template
+    res.render('login'); // Render the 'login.ejs' template
 });
 
 app.post('/login', passport.authenticate('local', {
@@ -88,10 +88,13 @@ app.post('/login', passport.authenticate('local', {
 }));
 
 app.get('/logout', (req, res) => {
-  req.logout();
-  res.redirect('/');
+    req.logout();
+    res.redirect('/');
 });
 
+app.get('/employeeList', async (req, res) => {
+    res.render('employeeList'); 
+});
 
 
 async function fetchJsonFilesFromDropbox(folderPath) {
@@ -118,9 +121,9 @@ async function fetchJsonFilesFromDropbox(folderPath) {
  * Get dropbox
  */
 app.get('/dashboard', async (req, res) => {
-  const jsonFiles = await fetchJsonFilesFromDropbox('/Aplicativos/TCCPUCPR2023');
-  // Now `jsonFiles` contains the JSON content of all the .json files in the folder.
-  res.json(jsonFiles);
+    const jsonFiles = await fetchJsonFilesFromDropbox('/Aplicativos/TCCPUCPR2023');  
+    // Now `jsonFiles` contains the JSON content of all the .json files in the folder.
+    res.json(jsonFiles);
 });
 
 
