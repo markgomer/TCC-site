@@ -64,6 +64,31 @@ function countCorrectChoices(jsonList, playerName) {
   return correctChoices;
 }
 
+function plotCorrectChoicesPieChart(playerName) {
+  const ctx = document.getElementById('correctChoicesPieChart').getContext('2d');
+  const numberOfSessions = jsonList.filter(session => session.playerName === playerName).length;
+  const totalGuesses = 15 * numberOfSessions;
+  const correctGuesses = countCorrectChoices(jsonList, playerName);
+  const incorrectGuesses = totalGuesses - correctGuesses;
+
+  const data = {
+    labels: ['Correct Guesses', 'Incorrect Guesses'],
+    datasets: [{
+      data: [correctGuesses, incorrectGuesses],
+      backgroundColor: ['rgba(75, 192, 192, 0.5)', 'rgba(255, 99, 132, 0.5)'],
+      borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+      borderWidth: 1
+    }]
+  };
+
+  const config = {
+    type: 'pie',
+    data: data
+  };
+
+  const myPieChart = new Chart(ctx, config);
+}
+
 function callgraphs(name) {
   const totalTime = totalPlayTime(name);
   const countGames = countGamesPlayed(name)
