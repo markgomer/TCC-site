@@ -410,6 +410,35 @@ function showTime(averageTime) {
     document.getElementById('averageTime').innerText = averageTime.toFixed(1) + ' secs';
 }
 
+function isPlayerChoiceCorrect(objectName, status) {
+    const firstChar = parseInt(objectName.charAt(0), 10);
+    return firstChar === status;
+  }
+  
+function calculateRateOfCorrectGuesses(jsonList, playerName) {
+    let correctGuesses = 0;
+    let totalTime = 0;
+
+    for (const session of jsonList) {
+        if (session.playerName !== playerName) {
+            continue;
+        }
+        totalTime += session.totalTime;
+
+        for (const objectData of session.objectsData) {
+            if (isPlayerChoiceCorrect(objectData.objectName, objectData.status)) {
+                correctGuesses++;
+            }
+        }
+    }
+
+    // Avoid division by zero or NaN
+    if (totalTime === 0) {
+        return null;
+    }
+    return correctGuesses / totalTime;
+}
+
 /**
 * Fetch and Prepare Data
 * Assuming you have a route /dashboard in your Express app that serves 
