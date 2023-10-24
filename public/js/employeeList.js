@@ -97,10 +97,11 @@ function callgraphs(name) {
   <div> 
       <p>Tempo total jogado: ${totalTime}</p>
       <p>Número de sessões jogadas: ${countGames}</p>
-      <p>Número de acertos: ${correctChoices}</p>
+      <canvas id="correctChoicesPieChart" width="200" height="200"></canvas>
   </div>
   `;
   document.getElementById("fillGraphs").innerHTML = html;
+  plotCorrectChoicesPieChart(name);
 }
 
 // Function to generate a list of unique player names
