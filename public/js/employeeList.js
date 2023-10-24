@@ -92,7 +92,6 @@ function plotCorrectChoicesPieChart(playerName) {
 function callgraphs(name) {
   const totalTime = totalPlayTime(name);
   const countGames = countGamesPlayed(name)
-  const correctChoices = countCorrectChoices(jsonList, name);
   const html = `
   <div> 
       <p>Tempo total jogado: ${totalTime}</p>
