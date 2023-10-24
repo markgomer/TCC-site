@@ -166,7 +166,7 @@ function getMeanTimeByActivity (jsonFilesArray) {
     jsonFilesArray.forEach(sessionJson => {
         // get the interacted objects in a session
         sessionJson.objectsData.forEach(activityObj => { 
-            let key = activityObj.objectName;
+            let key = activityObj.description;
             if (!sumObj[key]) {
                 sumObj[key] = 0;
                 countObj[key] = 0;
@@ -469,8 +469,8 @@ function plotRateOverTimeBarGraph(jsonList) {
     const myBarChart = new Chart(ctx, config);
 }
 
-function addDescriptions(objectsJson) {
-    const translationMap = {
+function addDescriptions(dataArray) {
+    const descriptionMap = {
         "1_1865": "Taludes",
         "2_18231_01": "EPI1",
         "2_18231_02": "EPI2",
@@ -493,16 +493,16 @@ function addDescriptions(objectsJson) {
         "1_18244": "Armazenamento em sequencia"
     };
 
-    return objectsJson.map(entry => {
+    return dataArray.map(entry => {
         // Deep clone the original entry to avoid modifying it
         const newEntry = JSON.parse(JSON.stringify(entry));
 
-        // Translate objectName in each objectsData item
+        // Add description to each objectsData item based on objectName
         newEntry.objectsData = newEntry.objectsData.map(obj => {
-            const translatedObjectName = translationMap[obj.objectName] || obj.objectName;
+            const description = descriptionMap[obj.objectName] || null;
             return {
                 ...obj,
-                objectName: translatedObjectName
+                description: description
             };
         });
 
