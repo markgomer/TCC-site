@@ -481,7 +481,8 @@ async function fetchAndPrepareData() {
     const response = await fetch('/dashboard');
     const jsonList = await response.json();
   
-    //localStorage.setItem('jsonList', jsonList);
+    //sessionStorage.setItem('jsonList', jsonList);
+    sessionStorage.setItem('jsonList', JSON.stringify(jsonList));
 
     const successData = [];
     successData.push(getTotalRightHits(jsonList)); // Holds success counts by employee
