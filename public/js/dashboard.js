@@ -492,9 +492,9 @@ async function fetchAndPrepareData() {
     
     const averageTime = calculateAverageTimePerPlayer(jsonList);
     
-    const employeesList = extractUniquePlayerNames(jsonList);
-    const filteredData = filterByPlayerName(jsonList, "Anderson");
-    const uniqueObjectNames = extractUniqueObjectNames(jsonList);
+    //const employeesList = extractUniquePlayerNames(jsonList);
+    //const filteredData = filterByPlayerName(jsonList, "Anderson");
+    //const uniqueObjectNames = extractUniqueObjectNames(jsonList);
 
     return { jsonList, successData, timeSpentData, averageTime };
 }
