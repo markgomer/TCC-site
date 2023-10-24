@@ -469,6 +469,46 @@ function plotRateOverTimeBarGraph(jsonList) {
     const myBarChart = new Chart(ctx, config);
 }
 
+function addDescriptions(objectsJson) {
+    const translationMap = {
+        "1_1865": "Taludes",
+        "2_18231_01": "EPI1",
+        "2_18231_02": "EPI2",
+        "​2_18231_04": "EPI3",
+        "2_1861": "Entulhos",
+        "2_18423": "Sanitários",
+        "2_1885": "Vergalhões",
+        "2_18121": "Madeira 01",
+        "2_18121_02": "Madeira 02",
+        "2_18241_01": "Obstruções",
+        "2_181265": "Ressaltos",
+        "2_18131": "Proteção contra queda 00",
+        "2_18131_01": "Proteção contra queda 01",
+        "2_18131_02": "Proteção contra queda 02",
+        "2_18231_03": "Proteção contra queda 03",
+        "2_18246": "Armazenamento da cal",
+        "2_18247": "Armazenamento de tóxicos - 01",
+        "2_18247_01": "Armazenamento de tóxicos - 02",
+        "1_18243": "Tubos",
+        "1_18244": "Armazenamento em sequencia"
+    };
+
+    return objectsJson.map(entry => {
+        // Deep clone the original entry to avoid modifying it
+        const newEntry = JSON.parse(JSON.stringify(entry));
+
+        // Translate objectName in each objectsData item
+        newEntry.objectsData = newEntry.objectsData.map(obj => {
+            const translatedObjectName = translationMap[obj.objectName] || obj.objectName;
+            return {
+                ...obj,
+                objectName: translatedObjectName
+            };
+        });
+
+        return newEntry;
+    });
+}
 
 /**
 * Fetch and Prepare Data
@@ -477,8 +517,10 @@ function plotRateOverTimeBarGraph(jsonList) {
 */
 async function fetchAndPrepareData() {
     const response = await fetch('/dashboard');
-    const jsonList = await response.json();
-  
+    const jsonRaw = await response.json();
+    
+    const jsonList = addDescriptions(jsonRaw);
+
     //sessionStorage.setItem('jsonList', jsonList);
     sessionStorage.setItem('jsonList', JSON.stringify(jsonList));
 
