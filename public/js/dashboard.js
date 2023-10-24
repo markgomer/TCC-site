@@ -139,7 +139,7 @@ function plotSuccessRateBarChart(data) {
         data: {
             labels: topPlayerNames,
             datasets: [{
-                label: 'Success Rate (%)',
+                label: 'Taxa de acertos (%)',
                 data: topSuccessRates,
                 backgroundColor: 'rgba(75, 192, 192, 0.5)',
                 borderColor: 'rgba(75, 192, 192, 1)',
@@ -230,7 +230,7 @@ function timeSpentBarChart(timeSpentData) {
       datasets: [{
         //label: 'Sample Data',
         //data: [12, 19, 3, 5, 2],
-        label: "Mean time spent",
+        label: "Tempo médio gasto",
         data: Object.values(timeSpentData),
         backgroundColor: [
           'rgba(255, 99, 132, 0.6)',
@@ -300,7 +300,7 @@ function createPlayerActivityDistribution(jsonList) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Total Time Spent',
+                label: 'Tempo total gasto por jogador',
                 data: data,
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
@@ -446,7 +446,7 @@ function plotRateOverTimeBarGraph(jsonList) {
     const chartData = {
         labels: uniquePlayers,
         datasets: [{
-            label: 'Rate of Correct Guesses/Total Time',
+            label: 'Taxa de acertos/Tempo total',
             data: rates,
             backgroundColor: 'rgba(75, 192, 192, 0.5)',
             borderColor: 'rgba(75, 192, 192, 1)',
