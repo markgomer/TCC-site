@@ -439,6 +439,39 @@ function calculateRateOfCorrectGuesses(jsonList, playerName) {
     return correctGuesses / totalTime;
 }
 
+function plotRateOverTimeBarGraph(jsonList) {
+    const ctx = document.getElementById('rateOverTimeBarGraph').getContext('2d');
+
+    const uniquePlayers = [...new Set(jsonList.map(session => session.playerName))];
+    const rates = uniquePlayers.map(playerName => calculateRateOfCorrectGuesses(jsonList, playerName)).filter(rate => rate !== null);
+
+    const chartData = {
+        labels: uniquePlayers,
+        datasets: [{
+            label: 'Rate of Correct Guesses/Total Time',
+            data: rates,
+            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+        }]
+    };
+
+    const config = {
+        type: 'bar',
+        data: chartData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    };
+
+    const myBarChart = new Chart(ctx, config);
+}
+
+
 /**
 * Fetch and Prepare Data
 * Assuming you have a route /dashboard in your Express app that serves 
@@ -487,7 +520,7 @@ async function populateCharts() {
     
     plotScatterChart(jsonList);
 
-    showMostObservedObjects(jsonList);
+    plotRateOverTimeBarGraph(jsonList);
     
 }
 
