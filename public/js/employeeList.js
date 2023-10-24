@@ -110,15 +110,15 @@ async function generatePlayerList() {
   const response = await fetch('/dashboard');
   jsonList = await response.json();
   //sessionStorage.setItem('jsonList', jsonList);
-  const uniquePlayerNames = new Set();
+  const playerNames = new Array();
 
   // Loop through each game session to collect player names
   jsonList.forEach((gameSession) => {
-  uniquePlayerNames.add(gameSession.playerName);
+    playerNames.unshift(gameSession.playerName);
   });
-
+  const uniquePlayers = new Set(playerNames);
   // Generate HTML list items for each unique player name
-  const listHtml = Array.from(uniquePlayerNames)
+  const listHtml = Array.from(uniquePlayers)
   .map(name => `
   <li id="player" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="callgraphs('${name}')" )">
     ${name}
