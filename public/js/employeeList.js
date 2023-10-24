@@ -100,6 +100,7 @@ function callgraphs(name) {
       <canvas id="correctChoicesPieChart" width="200" height="200"></canvas>
   </div>
   `;
+  document.getElementById("exampleModalLabel").innerHTML = name;
   document.getElementById("fillGraphs").innerHTML = html;
   plotCorrectChoicesPieChart(name);
 }
@@ -127,7 +128,7 @@ async function generatePlayerList() {
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">${name}</h1>
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Dados do Jogador</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body" id="fillGraphs">
