@@ -82,7 +82,7 @@ function calculateAverageTimePerPlayer(jsonList) {
 
 
 function calculateSuccessRate(jsonList, playerName) {
-    const uniqueObjectNames = new Set();
+    //const uniqueObjectNames = new Set();
     let successCount = 0;
     const lowerCasePlayerName = playerName.toLowerCase(); // Make it case insensitive
 
@@ -95,7 +95,7 @@ function calculateSuccessRate(jsonList, playerName) {
                         const status = objData.status.toString();  // Make sure it's a string
 
                         // Count unique objectName values
-                        uniqueObjectNames.add(objectName);
+                        //uniqueObjectNames.add(objectName);
 
                         // Check if it's a success
                         if (objectName[0] === status[0]) {
@@ -108,8 +108,8 @@ function calculateSuccessRate(jsonList, playerName) {
     });
 
     // Calculate the success rate
-    const totalUniqueObjects = uniqueObjectNames.size;
-    if (totalUniqueObjects === 0) return 0; // Prevent division by zero
+    const totalUniqueObjects = 15; // uniqueObjectNames.size;
+    //if (totalUniqueObjects === 0) return 0; // Prevent division by zero
 
     const successRate = (successCount / totalUniqueObjects) * 100;
 
